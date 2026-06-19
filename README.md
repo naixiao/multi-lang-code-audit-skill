@@ -25,7 +25,6 @@
 - **降低误报**：区分 `CONFIRMED`、`ENV_DEPENDENT`、`PENDING_TRACE`、`STATIC_ONLY`、`NOT_EXPLOITABLE`。
 - **不漏掉半成品风险**：无法闭合的数据流不会被删除，而是进入待验证风险池，方便后续深挖。
 - **融合实战模式**：内置动态 include、MIME 绕过、HQL 注入、Zip Slip、弱口令、未授权 action、Source Map 泄露等真实报告模式。
-- **可调度专项 skill**：PHP/Java 项目可联动已有 route mapper、auth audit、route tracer、SQL/file/upload/XXE 等专项审计 skill。
 - **报告即交付物**：内置统一报告模板，输出风险统计、覆盖矩阵、漏洞详情、PoC、修复优先级和回归搜索命令。
 - **支持提交型报告**：用户明确要求时，可生成 CNVD/CVE 风格报告，并标注截图、视频等人工复核证据位。
 - **适合 SRC/CNVD/CVE/Bug Bounty**：既能做项目全量审计，也能围绕单个高危入口做深度漏洞挖掘。
