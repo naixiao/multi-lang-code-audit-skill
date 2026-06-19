@@ -1,0 +1,35 @@
+# Local/private vulnerability reports and research material
+漏洞报告/
+
+# Generated audit outputs
+*_audit/
+*_audit_inventory/
+audit_inventory.json
+audit_inventory.md
+route_mapping/
+route_mapper/
+route_tracer/
+vuln_audit/
+qa_reports/
+quality_report.md
+
+# Python cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Local env/secrets
+.env
+.env.*
+*.key
+*.pem
+*.p12
+*.pfx

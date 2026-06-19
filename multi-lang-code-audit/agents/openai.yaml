@@ -1,0 +1,4 @@
+interface:
+  display_name: "Multi-language Code Audit"
+  short_description: "Evidence-driven source security audits"
+  default_prompt: "Use $multi-lang-code-audit to audit this source tree and produce an evidence-driven vulnerability report."
