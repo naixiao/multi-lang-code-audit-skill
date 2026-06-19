@@ -259,24 +259,6 @@ cp -r ./multi-lang-code-audit ~/.codex/skills/
 使用 $multi-lang-code-audit 审计该项目，默认输出完整漏洞报告；如果确认存在可提交漏洞，请同时生成可提交的 CNVD 或 CVE/GHSA/advisory 报告。
 ```
 
-生成可提交 CNVD 报告：
-
-```text
-使用 $multi-lang-code-audit 审计该项目，并生成可直接提交 CNVD 的漏洞报告。
-如果需要截图或录制视频证明，请在对应位置用人工复核标记指出需要补充的内容。
-源码路径：/path/to/source
-输出路径：/path/to/output
-```
-
-生成 CVE / advisory 报告：
-
-```text
-使用 $multi-lang-code-audit 审计该开源组件，并生成可用于 CVE/GHSA/厂商披露的英文漏洞报告。
-如果需要截图或终端输出证明，请在对应位置标记人工复核项。
-源码路径：/path/to/source
-输出路径：/path/to/output
-```
-
 ### 推荐审计提示词
 
 适合全量项目审计：
