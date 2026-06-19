@@ -356,7 +356,6 @@ python multi-lang-code-audit/scripts/audit_inventory.py /path/to/source --out /p
 - **证据链优先**：每个漏洞都要求入口、Source、校验缺陷、Sink、触发条件、影响和 PoC。
 - **不静默丢弃风险**：未闭合的数据流会进入待验证风险池，而不是直接忽略。
 - **适配实战报告**：内置来自真实漏洞报告的审计模式，如动态 include、MIME 绕过、HQL 注入、Zip Slip、弱口令和未授权 action。
-- **可组合现有 skill**：PHP/Java 项目可调度已有专项审计 skill，其他语言使用内置规则完成审计。
 - **统一报告模板**：输出风险统计、覆盖矩阵、漏洞详情、PoC、修复建议、回归搜索命令。
 
 ## 与普通 SAST 的区别
