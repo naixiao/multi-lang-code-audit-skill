@@ -51,14 +51,7 @@
   -> 最终审计报告
 ```
 
-### 3. PHP / Java 专项能力联动
-
-对 PHP 和 Java 项目，skill 会优先复用本地已有专项能力：
-
-- PHP：`php-route-mapper`、`php-auth-audit`、`php-route-tracer`、`php-sql-audit`、`php-file-upload-audit`、`php-ssrf-audit`、`php-logic-audit` 等。
-- Java：`java-route-mapper`、`java-auth-audit`、`java-route-tracer`、`java-sql-audit`、`java-file-upload-audit`、`java-vuln-scanner`、`java-xxe-audit` 等。
-
-### 4. 实战漏洞模式库
+### 3. 实战漏洞模式库
 
 内置从真实漏洞报告提炼出的高价值检查点：
 
@@ -73,11 +66,11 @@
 - 弱口令、默认账号、未授权访问、Source Map 泄露
 - 充值、排名、邀请、订单状态等业务逻辑缺陷
 
-### 5. 可运行的初始审计索引器
+### 4. 可运行的初始审计索引器
 
 内置 `audit_inventory.py`，可快速生成项目语言、依赖、路由候选、Source 候选和 Sink 候选清单，作为人工审计和 Agent 审计的起点。
 
-### 6. 统一漏洞报告模板
+### 5. 统一漏洞报告模板
 
 报告模板关注“可复核”和“可修复”：
 
