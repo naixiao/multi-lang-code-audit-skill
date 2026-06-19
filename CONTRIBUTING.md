@@ -20,7 +20,7 @@
 - 修改 skill 后请运行：
 
 ```bash
-python path/to/quick_validate.py path/to/multi-lang-code-audit
+python scripts/quick_validate.py multi-lang-code-audit
 ```
 
 ## 推荐规则格式
