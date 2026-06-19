@@ -17,7 +17,7 @@
 
 `PHP`、`Java`、`Python`、`Go`、`.NET`、`C#`、`代码审计`、`白盒审计`、`源码审计`、`安全审计`、`漏洞挖掘`、`Web 安全`、`SQL 注入`、`文件上传`、`任意文件读取`、`SSRF`、`RCE`、`XSS`、`XXE`、`反序列化`、`权限绕过`、`越权`、`业务逻辑漏洞`、`Zip Slip`。
 
-## 为什么值得 Star
+## 核心亮点
 
 - **覆盖主流后端语言**：PHP、Java、Python、Go、.NET/C#，适合多语言仓库和企业混合技术栈。
 - **面向真实代码审计**：围绕路由、鉴权、参数、调用链、Source/Sink、PoC、修复建议组织流程。
@@ -333,6 +333,10 @@ python multi-lang-code-audit/scripts/audit_inventory.py /path/to/source --out /p
 | 未闭合风险 | 容易丢失 | 进入待验证风险池 |
 | 报告输出 | 告警为主 | 可提交的漏洞报告 |
 | 方法扩展 | 写规则成本较高 | Markdown 化，可持续沉淀 |
+
+## 支持项目
+
+如果这个项目对你的 PHP、Java、Python、Go、.NET 代码审计、白盒审计或漏洞挖掘有帮助，欢迎点一个 Star，方便后续持续更新规则、样例和实战审计模式。
 
 ## 免责声明
 

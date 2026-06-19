@@ -18,7 +18,7 @@ multi-lang-code-audit-skill
 PHP/Java/Python/Go/.NET 多语言代码审计 Codex Skill，支持白盒审计、Source/Sink 追踪、鉴权分析、漏洞挖掘、PoC 与报告生成。
 ```
 
-## README 首屏推荐卖点
+## README 首屏推荐亮点
 
 ```text
 不是简单关键词扫描，而是一套面向真实代码审计的 Agent 工作流：
