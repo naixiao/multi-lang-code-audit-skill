@@ -154,7 +154,29 @@ multi-lang-code-audit/
 
 ## 快速使用
 
-### 安装方式一：克隆后复制 Skill 目录
+### 安装方式一：让 Codex 根据项目链接安装（推荐）
+
+在 Codex 新窗口中直接发送本项目地址，并让 Codex 帮你安装：
+
+```text
+帮我安装这个 Codex Skill：
+https://github.com/naixiao/multi-lang-code-audit-skill
+
+要求：
+1. 将仓库中的 multi-lang-code-audit/ 安装到本地 Codex skills 目录。
+2. 安装完成后检查 SKILL.md 是否存在。
+3. 运行 skill 校验脚本，确认该 skill 可被 Codex 识别。
+```
+
+安装完成后，新窗口可以直接使用：
+
+```text
+使用 $multi-lang-code-audit 对源码目录进行完整代码审计，输出漏洞报告、证据链、PoC 和修复建议。
+源码路径：/path/to/source
+输出目录：/path/to/output
+```
+
+### 安装方式二：克隆后复制 Skill 目录
 
 将本仓库中的 `multi-lang-code-audit/` 整个目录复制到 Codex 可识别的 skills 目录中。
 
@@ -194,7 +216,7 @@ cp -r ./multi-lang-code-audit ~/.codex/skills/
       audit_inventory.py
 ```
 
-### 安装方式二：直接在当前仓库中使用
+### 安装方式三：直接在当前仓库中使用
 
 如果你在 Codex 中打开的是本仓库，也可以直接引用：
 
