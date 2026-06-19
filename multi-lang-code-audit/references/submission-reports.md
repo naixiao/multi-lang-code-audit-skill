@@ -15,7 +15,7 @@ Do not ask which mode to use unless the user's wording is ambiguous and the outp
 When the local `漏洞报告/` folder exists, use it as a style and field reference:
 
 - CNVD examples: `漏洞报告/CNVD/` and `漏洞报告/cnvd_reports/`.
-- CVE/advisory examples: `漏洞报告/_foreign_cve_reports/`.
+- CVE/advisory examples: `漏洞报告/cve_reports/`.
 - SRC/Butian examples may inform readable PoC style, but do not use them as the primary CNVD/CVE structure unless CNVD/CVE examples are missing.
 
 Use the corpus for report shape, section order, evidence granularity, and wording style. Do not copy target names, private data, tokens, cookies, screenshots, or unrelated vulnerability facts into the new report.
