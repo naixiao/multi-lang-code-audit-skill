@@ -25,6 +25,7 @@ __pycache__/
 Thumbs.db
 .idea/
 .vscode/
+.tools/
 
 # Local env/secrets
 .env
