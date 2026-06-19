@@ -169,7 +169,7 @@ https://github.com/naixiao/multi-lang-code-audit-skill
 安装完成后，新窗口可以直接使用：
 
 ```text
-使用 $multi-lang-code-audit 对源码目录进行完整代码审计，输出漏洞报告、证据链、PoC 和修复建议。
+使用 $multi-lang-code-audit 对源码目录进行完整代码审计，默认输出漏洞报告、证据链、PoC 和修复建议；如果需要，也可以明确要求生成可提交的 CNVD 或 CVE/GHSA/advisory 漏洞报告。
 源码路径：/path/to/source
 输出目录：/path/to/output
 ```
