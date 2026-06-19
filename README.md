@@ -154,11 +154,57 @@ multi-lang-code-audit/
 
 ## 快速使用
 
-将 `multi-lang-code-audit` 目录放到 Codex skills 目录中，例如：
+### 安装方式一：克隆后复制 Skill 目录
+
+将本仓库中的 `multi-lang-code-audit/` 整个目录复制到 Codex 可识别的 skills 目录中。
+
+Windows 示例：
 
 ```powershell
 Copy-Item -Recurse .\multi-lang-code-audit $env:USERPROFILE\.codex\skills\
 ```
+
+Linux / macOS 示例：
+
+```bash
+cp -r ./multi-lang-code-audit ~/.codex/skills/
+```
+
+安装后的目录结构应类似：
+
+```text
+~/.codex/skills/
+  multi-lang-code-audit/
+    SKILL.md
+    agents/
+      openai.yaml
+    references/
+      php.md
+      java.md
+      python.md
+      go.md
+      dotnet.md
+      vulnerability-matrix.md
+      evidence-gates.md
+      report-corpus-patterns.md
+      existing-skill-map.md
+      external-standards.md
+      report-template.md
+    scripts/
+      audit_inventory.py
+```
+
+### 安装方式二：直接在当前仓库中使用
+
+如果你在 Codex 中打开的是本仓库，也可以直接引用：
+
+```text
+使用 $multi-lang-code-audit 审计 /path/to/source，输出完整代码审计报告。
+```
+
+### 使用建议
+
+代码审计类任务越明确，效果越好。推荐使用“审计目标 + 漏洞类型 + 输出要求”的方式提问。
 
 在 Codex 中可以这样使用：
 
@@ -166,11 +212,103 @@ Copy-Item -Recurse .\multi-lang-code-audit $env:USERPROFILE\.codex\skills\
 使用 $multi-lang-code-audit 审计这个源码目录，输出完整代码审计报告。
 ```
 
+更推荐的强指向用法：
+
+```text
+使用 $multi-lang-code-audit 审计当前 PHP 项目是否存在 SQL 注入、文件上传、任意文件读取和未授权访问，输出 Markdown 漏洞报告。
+```
+
+```text
+使用 $multi-lang-code-audit 审计当前 Java 项目的路由、鉴权、SQL 注入、文件上传、任意文件读取和 XXE 风险，按严重程度输出报告。
+```
+
+```text
+使用 $multi-lang-code-audit 梳理当前 Python/FastAPI 项目的路由、参数、鉴权和 SSRF/命令执行/文件读取风险。
+```
+
+```text
+使用 $multi-lang-code-audit 审计当前 Go 项目的 archive/zip 解压逻辑，重点分析 Zip Slip、same-prefix 绕过、symlink/hardlink 逃逸。
+```
+
+```text
+使用 $multi-lang-code-audit 审计当前 .NET 项目的鉴权、IDOR、文件上传、路径穿越和 SQL 注入风险。
+```
+
+### 推荐审计提示词
+
+适合全量项目审计：
+
+```text
+使用 $multi-lang-code-audit 对源码目录进行白盒代码审计。
+
+要求：
+1. 先识别语言、框架、依赖、入口、路由、权限模型和危险函数。
+2. 按漏洞类型拆分审计：SQL 注入、命令执行、SSRF、XSS、文件读取、文件上传、文件写入、Zip Slip、XXE、反序列化、鉴权绕过、越权、CSRF、弱口令、配置泄露、业务逻辑漏洞。
+3. 每个漏洞必须包含：漏洞类型、风险等级、文件路径、行号、可达路径、Source-to-Sink 数据流、触发条件、PoC、影响、修复建议、置信度。
+4. 无法闭合的数据流不要删除，放入“待验证风险池”。
+5. 最终输出 Markdown 审计报告，按严重程度排序。
+
+源码路径：/path/to/source
+输出路径：/path/to/output
+```
+
+适合单类型深挖：
+
+```text
+使用 $multi-lang-code-audit 只审计当前项目的文件上传漏洞。
+
+重点关注：
+- 原始文件名是否可控
+- 扩展名白名单是否完整
+- MIME / Content-Type 是否可绕过
+- 上传目录是否 Web 可访问或可执行
+- 是否存在路径穿越写入
+- 是否可与 include / 静态资源目录 / 解析配置形成利用链
+
+输出要求：
+- 给出所有上传入口
+- 给出 Source-to-Sink 数据流
+- 给出可执行 PoC
+- 给出修复建议和回归搜索命令
+```
+
+### 使用 Codex Goal 持续审计
+
+如果项目较大，可以用 Codex 的目标模式持续运行：
+
+```text
+/goal
+你是代码审计编排器。
+
+任务：
+1. 使用 $multi-lang-code-audit 完整阅读并遵守 SKILL.md。
+2. 先枚举目标仓库的语言、框架、入口、路由、权限模型、数据流、危险函数、配置与依赖。
+3. 将审计拆分为多个漏洞类型，每次只聚焦一种漏洞类型，避免泛化。
+4. 每轮结果必须包含：漏洞类型、风险等级、文件路径、行号、可达路径、触发条件、攻击方式、影响、证据、修复建议、置信度、是否需要动态验证。
+5. 主审计员需要复核结果，去重、降噪、排除误报，并把所有单项结果合并成最终审计报告。
+6. 最终报告按严重程度排序，并明确列出：确认漏洞、环境依赖漏洞、疑似漏洞、未发现但已覆盖的审计项、审计盲区。
+
+源码路径：/path/to/source
+输出路径：/path/to/output
+```
+
 也可以先运行内置索引脚本，对项目做第一轮语言、路由、Source/Sink 和依赖清点：
 
 ```bash
 python multi-lang-code-audit/scripts/audit_inventory.py /path/to/source --out /path/to/output
 ```
+
+### 安全边界
+
+默认建议只做只读审计：
+
+- 不修改目标源码。
+- 不删除文件。
+- 不提交 git。
+- 不安装项目依赖，除非用户明确授权。
+- 不执行破坏性 PoC。
+- 如需运行命令，仅用于读取项目信息、搜索代码、运行只读测试或静态分析。
+- 对真实目标、Cookie、Token、账号密码、密钥和未公开 PoC 做脱敏处理。
 
 ## 设计特点
 
