@@ -108,3 +108,29 @@ rg -n "{pattern}" {paths}
 - [ ] Pending static hits are listed.
 - [ ] No template placeholders remain except `{host}`, `{cookie}`, `{token}` where intentional.
 ```
+
+## Submission Mode Addendum
+
+Use this addendum only when the user explicitly asks for a CNVD-ready or CVE-ready report. Otherwise do not add these sections.
+
+### CNVD-Ready Evidence Markers
+
+```markdown
+## 提交前人工复核
+
+- [ ] [人工复核-截图] 漏洞产品、组件或版本证明：{where_to_capture}
+- [ ] [人工复核-截图] PoC 请求或本地复现命令：{where_to_capture}
+- [ ] [人工复核-截图] 漏洞触发结果或敏感影响证明：{where_to_capture}
+- [ ] [人工复核-视频] 从环境准备、触发漏洞到结果证明的完整复现过程：{what_to_record}
+```
+
+### CVE / Advisory Evidence Markers
+
+```markdown
+## Evidence To Attach
+
+- [ ] [Manual Review - Screenshot] Affected version proof: {where_to_capture}
+- [ ] [Manual Review - Screenshot] PoC execution and vulnerable result: {where_to_capture}
+- [ ] [Manual Review - Screenshot] Fixed-version or patched-behavior comparison, if available: {where_to_capture}
+- [ ] [Manual Review - Video] Optional only when interaction is complex or the user requests video proof: {what_to_record}
+```

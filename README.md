@@ -27,6 +27,7 @@
 - **融合实战模式**：内置动态 include、MIME 绕过、HQL 注入、Zip Slip、弱口令、未授权 action、Source Map 泄露等真实报告模式。
 - **可调度专项 skill**：PHP/Java 项目可联动已有 route mapper、auth audit、route tracer、SQL/file/upload/XXE 等专项审计 skill。
 - **报告即交付物**：内置统一报告模板，输出风险统计、覆盖矩阵、漏洞详情、PoC、修复优先级和回归搜索命令。
+- **支持提交型报告**：用户明确要求时，可生成 CNVD/CVE 风格报告，并标注截图、视频等人工复核证据位。
 - **适合 SRC/CNVD/CVE/Bug Bounty**：既能做项目全量审计，也能围绕单个高危入口做深度漏洞挖掘。
 - **轻量可扩展**：规则、语言参考、报告模式都在 Markdown 中，方便安全研究员持续补充自己的方法论。
 
@@ -85,6 +86,14 @@
 - 回归搜索命令
 - 待验证风险池
 
+### 6. CNVD / CVE 提交报告模式
+
+默认情况下，skill 会直接生成普通代码审计报告。只有当用户明确声明“生成可提交 CNVD 报告”或“生成可提交 CVE/GHSA/advisory 报告”时，才会切换到提交型报告模式。
+
+- CNVD 模式会参考本地 `漏洞报告/CNVD/`、`漏洞报告/cnvd_reports/` 的报告风格，生成中文提交稿，并在需要截图、录制视频的位置添加人工复核标记。
+- CVE 模式会参考本地 `漏洞报告/_foreign_cve_reports/` 的报告风格，生成 CVE/advisory 披露稿，并在需要截图或终端输出证明的位置添加人工复核标记。
+- skill 不会伪造截图、视频、编号、厂商确认或公开公告；缺少动态证据时会明确标注为人工复核项。
+
 ## 适用场景
 
 - PHP、Java、Python、Go、.NET 项目的源码安全审计
@@ -141,6 +150,7 @@ multi-lang-code-audit/
     existing-skill-map.md
     external-standards.md
     report-template.md
+    submission-reports.md
   scripts/
     audit_inventory.py
 ```
@@ -205,6 +215,7 @@ cp -r ./multi-lang-code-audit ~/.codex/skills/
       existing-skill-map.md
       external-standards.md
       report-template.md
+      submission-reports.md
     scripts/
       audit_inventory.py
 ```
@@ -247,6 +258,24 @@ cp -r ./multi-lang-code-audit ~/.codex/skills/
 
 ```text
 使用 $multi-lang-code-audit 审计当前 .NET 项目的鉴权、IDOR、文件上传、路径穿越和 SQL 注入风险。
+```
+
+生成可提交 CNVD 报告：
+
+```text
+使用 $multi-lang-code-audit 审计该项目，并生成可直接提交 CNVD 的漏洞报告。
+如果需要截图或录制视频证明，请在对应位置用人工复核标记指出需要补充的内容。
+源码路径：/path/to/source
+输出路径：/path/to/output
+```
+
+生成 CVE / advisory 报告：
+
+```text
+使用 $multi-lang-code-audit 审计该开源组件，并生成可用于 CVE/GHSA/厂商披露的英文漏洞报告。
+如果需要截图或终端输出证明，请在对应位置标记人工复核项。
+源码路径：/path/to/source
+输出路径：/path/to/output
 ```
 
 ### 推荐审计提示词

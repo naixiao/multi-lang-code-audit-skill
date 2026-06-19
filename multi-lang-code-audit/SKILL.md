@@ -24,7 +24,7 @@ Audit by evidence chain, not keyword hits. Every confirmed finding must connect 
 6. Use `references/evidence-gates.md` to decide confirmed, environment-dependent, pending, or non-exploitable status.
 7. For PHP or Java projects, read `references/existing-skill-map.md` and delegate to the listed specialized local skills when available.
 8. Use `references/external-standards.md` only as a compact baseline for remediation and classification.
-9. Write the final report with `references/report-template.md`.
+9. Choose the report mode. If the user did not explicitly request a submission-ready report, write the normal audit report with `references/report-template.md`. If the user explicitly requests a CNVD or CVE submission-ready report, read `references/submission-reports.md` and use the local `漏洞报告/` corpus style when available.
 
 ## Operating Modes
 
@@ -87,6 +87,13 @@ Use the report template and include:
 - For each finding: ID, severity, affected entry, location, source-to-sink chain, exploitability prerequisites, PoC/request sample, impact, remediation, and confidence.
 - Pending-risk pool for unresolved traces and static sink hits.
 - Fix priority and regression-search commands.
+
+Report mode rules:
+
+- Default to `GENERAL_AUDIT` when the user only asks for audit results, vulnerability report, PoC, or remediation.
+- Use `CNVD_SUBMISSION` only when the user explicitly asks for a CNVD-ready, CNVD-submittable, or CNVD-style report.
+- Use `CVE_SUBMISSION` only when the user explicitly asks for a CVE-ready, CVE-submittable, advisory, GHSA, or responsible-disclosure style report.
+- For CNVD/CVE submission modes, include manual evidence markers instead of pretending screenshots or videos were captured. CNVD usually needs screenshots and often a reproduction video; CVE/advisory reports usually need screenshots or terminal output, but not video unless requested.
 
 ## Expected Output Layout
 
