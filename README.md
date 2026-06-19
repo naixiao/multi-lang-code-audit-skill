@@ -255,6 +255,10 @@ cp -r ./multi-lang-code-audit ~/.codex/skills/
 使用 $multi-lang-code-audit 审计当前 .NET 项目的鉴权、IDOR、文件上传、路径穿越和 SQL 注入风险。
 ```
 
+```text
+使用 $multi-lang-code-audit 审计该项目，默认输出完整漏洞报告；如果确认存在可提交漏洞，请同时生成可提交的 CNVD 或 CVE/GHSA/advisory 报告。
+```
+
 生成可提交 CNVD 报告：
 
 ```text
