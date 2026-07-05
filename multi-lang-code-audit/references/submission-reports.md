@@ -5,7 +5,7 @@ Use this reference only when the user explicitly asks for a CNVD-ready, CVE-read
 ## Mode Selection
 
 - `GENERAL_AUDIT`: Default. Use for ordinary code audit reports, vulnerability summaries, PoCs, remediation, and internal review output.
-- `CNVD_SUBMISSION`: Use only when the user mentions CNVD, CNVD submission, CNVD-ready report, or a directly submittable CNVD report.
+- `CNVD_SUBMISSION`: Use whenever the user asks to generate a CNVD vulnerability report, CNVD submission, CNVD-ready report, or a directly submittable CNVD report. The required output is a Chinese `.docx` document.
 - `CVE_SUBMISSION`: Use only when the user mentions CVE, GHSA, advisory, CNA, responsible disclosure, vendor disclosure, or a directly submittable CVE report.
 
 Do not ask which mode to use unless the user's wording is ambiguous and the output format materially changes the deliverable.
@@ -45,7 +45,16 @@ CVE/advisory evidence expectation:
 
 ## CNVD Submission Template
 
-Use Chinese. Prefer concise, directly submittable language.
+Use Chinese. Prefer concise, directly submittable language. Generate a valid `.docx` Word document; do not deliver Markdown, plain text, HTML, or a renamed file as the primary CNVD report.
+
+DOCX production requirements:
+
+- Use available Word document tooling, preferably the installed documents skill or a compatible `python-docx` workflow.
+- Use a formal report layout with a clear title, metadata block, numbered headings, readable Chinese fonts, restrained colors, page numbers, and consistently formatted PoC/code blocks.
+- Keep screenshot and video markers visually prominent so the reviewer cannot mistake them for completed evidence.
+- Render the DOCX to page images and inspect every page for clipping, overlap, broken tables, missing Chinese glyphs, and awkward page breaks. Correct defects and render again.
+- Name the deliverable `{project_name}_CNVD漏洞报告_{timestamp}.docx` unless the user provides a filename.
+- Deliver the `.docx` as the primary CNVD artifact. Keep temporary Markdown, render PNGs, and PDFs as internal working files unless the user requests them.
 
 Required sections:
 
@@ -104,5 +113,5 @@ Before finishing CNVD/CVE mode, verify:
 - The report contains no unreplaced target placeholders except intentional `{host}`, `{cookie}`, `{token}`, or `{version}` placeholders.
 - All exploit claims are backed by code evidence, runtime evidence, or marked as needing manual verification.
 - Screenshot/video requirements are visible and cannot be mistaken for already captured evidence.
-- CNVD reports are in Chinese unless the user requests otherwise.
+- CNVD reports are Chinese `.docx` documents. A different language or format is allowed only when the user explicitly overrides it.
 - CVE/advisory reports are in English unless the user requests otherwise.
