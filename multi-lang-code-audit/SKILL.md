@@ -1,6 +1,6 @@
 ---
 name: multi-lang-code-audit
-description: Evidence-driven white-box security audit workflow for PHP, Java, Python, .NET/C#, and Go source code. Use when Codex needs to audit Web/API/backend projects for routes, authentication, authorization, user-controlled inputs, dangerous sinks, dependency risks, exploitability, PoC requests, CNVD Chinese DOCX reports, CVE/advisory reports, and vulnerabilities including SQL injection, command injection, SSRF, XSS, file read/write/upload, Zip Slip, deserialization, XXE, auth bypass, IDOR, CSRF, weak credentials, unauthenticated access, configuration exposure, and business logic flaws.
+description: Evidence-driven white-box security audit workflow for PHP, Java, Python, .NET/C#, and Go source code. Use when Codex needs to audit Web/API/backend projects for routes, authentication, authorization, user-controlled inputs, dangerous sinks, dependency risks, exploitability, PoC requests, and vulnerability reports covering SQL injection, command injection, SSRF, XSS, file read/write/upload, Zip Slip, deserialization, XXE, auth bypass, IDOR, CSRF, weak credentials, unauthenticated access, configuration exposure, and business logic flaws.
 ---
 
 # Multi-language Code Audit
@@ -24,7 +24,7 @@ Audit by evidence chain, not keyword hits. Every confirmed finding must connect 
 6. Use `references/evidence-gates.md` to decide confirmed, environment-dependent, pending, or non-exploitable status.
 7. For PHP or Java projects, read `references/existing-skill-map.md` and delegate to the listed specialized local skills when available.
 8. Use `references/external-standards.md` only as a compact baseline for remediation and classification.
-9. Choose the report mode. If the user did not explicitly request a submission-ready report, write the normal audit report with `references/report-template.md`. If the user asks to generate a CNVD vulnerability report, always create a Chinese `.docx` report and read `references/submission-reports.md`. If the user requests a CVE submission-ready report, read the same reference and use the CVE/advisory format.
+9. Choose the report mode. If the user did not explicitly request a submission-ready report, write the normal audit report with `references/report-template.md`. If the user explicitly requests a CNVD or CVE submission-ready report, read `references/submission-reports.md` and use the local `漏洞报告/` corpus style when available.
 
 ## Operating Modes
 
@@ -91,10 +91,9 @@ Use the report template and include:
 Report mode rules:
 
 - Default to `GENERAL_AUDIT` when the user only asks for audit results, vulnerability report, PoC, or remediation.
-- Use `CNVD_SUBMISSION` whenever the user explicitly asks to generate a CNVD vulnerability report, CNVD-ready report, CNVD-submittable report, or CNVD-style report. Generate it in Chinese and deliver it as a real `.docx` document, not Markdown renamed to `.docx`.
+- Use `CNVD_SUBMISSION` only when the user explicitly asks for a CNVD-ready, CNVD-submittable, or CNVD-style report.
 - Use `CVE_SUBMISSION` only when the user explicitly asks for a CVE-ready, CVE-submittable, advisory, GHSA, or responsible-disclosure style report.
 - For CNVD/CVE submission modes, include manual evidence markers instead of pretending screenshots or videos were captured. CNVD usually needs screenshots and often a reproduction video; CVE/advisory reports usually need screenshots or terminal output, but not video unless requested.
-- For `CNVD_SUBMISSION`, use available Word document tooling, preferably the installed documents skill. Apply professional Chinese report styles, render the DOCX to page images, inspect every page for layout defects, fix issues, and deliver the final `.docx` as the primary report artifact.
 
 ## Expected Output Layout
 
@@ -113,14 +112,6 @@ When the user does not specify an output path, create `{source_path}_audit` and 
   final/
     {project_name}_code_audit_{timestamp}.md
 ```
-
-For `CNVD_SUBMISSION`, replace the normal final report with:
-
-```text
-{output_path}/final/{project_name}_CNVD漏洞报告_{timestamp}.docx
-```
-
-Do not treat an intermediate Markdown draft as the CNVD deliverable. The final CNVD report must be a valid Word document and must be visually verified after rendering when document rendering is available.
 
 For delegated PHP/Java mode, preserve child skill outputs when they are generated, but also merge the findings into the single final report.
 

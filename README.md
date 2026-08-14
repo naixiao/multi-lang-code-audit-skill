@@ -26,7 +26,7 @@
 - **不漏掉半成品风险**：无法闭合的数据流不会被删除，而是进入待验证风险池，方便后续深挖。
 - **融合实战模式**：内置动态 include、MIME 绕过、HQL 注入、Zip Slip、弱口令、未授权 action、Source Map 泄露等真实报告模式。
 - **报告即交付物**：内置统一报告模板，输出风险统计、覆盖矩阵、漏洞详情、PoC、修复优先级和回归搜索命令。
-- **支持提交型报告**：用户明确要求生成 CNVD 报告时，输出中文 `.docx` 文档；也可生成 CVE/GHSA/advisory 报告，并标注截图、视频等人工复核证据位。
+- **支持提交型报告**：用户明确要求时，可生成 CNVD/CVE 风格报告，并标注截图、视频等人工复核证据位。
 - **适合 SRC/CNVD/CVE/Bug Bounty**：既能做项目全量审计，也能围绕单个高危入口做深度漏洞挖掘。
 - **轻量可扩展**：规则、语言参考、报告模式都在 Markdown 中，方便安全研究员持续补充自己的方法论。
 
@@ -87,7 +87,7 @@
 
 ### 6. CNVD / CVE 提交报告模式
 
-默认情况下，skill 会直接生成普通代码审计报告。当用户提及生成 CNVD 漏洞报告时，将生成中文 `.docx` 文档；当用户明确声明生成 CVE/GHSA/advisory 报告时，则切换到对应的披露报告模式。
+默认情况下，skill 会直接生成普通代码审计报告。只有当用户明确声明“生成可提交 CNVD 报告”或“生成可提交 CVE/GHSA/advisory 报告”时，才会切换到提交型报告模式。
 
 ## 适用场景
 
@@ -169,7 +169,7 @@ https://github.com/naixiao/multi-lang-code-audit-skill
 安装完成后，新窗口可以直接使用：
 
 ```text
-使用 $multi-lang-code-audit 对源码目录进行完整代码审计，默认输出漏洞报告、证据链、PoC 和修复建议；如果需要，也可以要求生成中文 .docx 格式的 CNVD 漏洞报告，或生成 CVE/GHSA/advisory 漏洞报告。
+使用 $multi-lang-code-audit 对源码目录进行完整代码审计，默认输出漏洞报告、证据链、PoC 和修复建议；如果需要，也可以明确要求生成可提交的 CNVD 或 CVE/GHSA/advisory 漏洞报告。
 源码路径：/path/to/source
 输出目录：/path/to/output
 ```
@@ -256,7 +256,7 @@ cp -r ./multi-lang-code-audit ~/.codex/skills/
 ```
 
 ```text
-使用 $multi-lang-code-audit 审计该项目，默认输出完整漏洞报告；如果确认存在可提交漏洞，请同时生成中文 .docx 格式的 CNVD 漏洞报告，或生成可提交的 CVE/GHSA/advisory 报告。
+使用 $multi-lang-code-audit 审计该项目，默认输出完整漏洞报告；如果确认存在可提交漏洞，请同时生成可提交的 CNVD 或 CVE/GHSA/advisory 报告。
 ```
 
 ### 推荐审计提示词

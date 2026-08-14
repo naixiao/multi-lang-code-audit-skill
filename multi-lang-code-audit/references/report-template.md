@@ -111,7 +111,7 @@ rg -n "{pattern}" {paths}
 
 ## Submission Mode Addendum
 
-Use this addendum only when the user explicitly asks for a CNVD-ready or CVE-ready report. Otherwise do not add these sections. Build CNVD reports as Chinese `.docx` documents and use the following content as Word sections, not as the final Markdown deliverable.
+Use this addendum only when the user explicitly asks for a CNVD-ready or CVE-ready report. Otherwise do not add these sections.
 
 ### CNVD-Ready Evidence Markers
 
