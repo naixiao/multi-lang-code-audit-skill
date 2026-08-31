@@ -1,76 +1,24 @@
-# 开源发布说明
+# 维护与发布
 
-## 推荐仓库名称
+仓库地址：https://github.com/naixiao/multi-lang-code-audit-skill
 
-```text
-multi-lang-code-audit-skill
-```
+## 提交前检查
 
-## 推荐中文项目描述
+- 只暂存本次修改的文件，检查 `git diff --cached`。
+- 不提交原始漏洞报告、测试输出、凭据或客户信息。截图也需要脱敏。
+- 修改规则时保留适用条件和误报说明；修改脚本时附上复现用例。
+- 检查 README 中的命令、引用路径和报告说明是否与实现一致。
 
-```text
-面向 PHP、Java、Python、Go、.NET/C# 的多语言代码审计 Codex Skill：以 Route -> Auth -> Trace -> Sink 为核心，支持白盒审计、源码审计、漏洞挖掘、Source/Sink 数据流追踪、鉴权分析、PoC 生成和结构化漏洞报告输出。
-```
-
-## GitHub About 推荐短描述
-
-```text
-PHP/Java/Python/Go/.NET 多语言代码审计 Codex Skill，支持白盒审计、Source/Sink 追踪、鉴权分析、漏洞挖掘、PoC 与报告生成。
-```
-
-## README 首屏推荐亮点
-
-```text
-不是简单关键词扫描，而是一套面向真实代码审计的 Agent 工作流：
-
-- 覆盖 PHP、Java、Python、Go、.NET/C#
-- Route -> Auth -> Trace -> Sink 证据链审计
-- 支持 SQLi、RCE、SSRF、XSS、XXE、文件上传、任意文件读取、Zip Slip、反序列化、越权、业务逻辑漏洞
-- 内置真实漏洞报告沉淀的实战模式
-- 区分 confirmed / environment-dependent / pending / static-only，减少误报和漏报
-- 输出可提交、可复核、可修复的漏洞报告
-```
-
-## 推荐 Topics / 标签
-
-```text
-code-audit
-security-audit
-white-box-audit
-source-code-audit
-vulnerability-research
-vulnerability-discovery
-php
-java
-python
-golang
-dotnet
-csharp
-web-security
-sast
-source-sink
-taint-analysis
-bug-bounty
-cnvd
-cve
-codex-skill
-```
-
-## 发布前检查
-
-- [ ] 确认 `漏洞报告/` 没有提交到仓库。
-- [ ] 确认没有真实目标、Cookie、Token、账号密码、密钥。
-- [ ] 确认 `multi-lang-code-audit/SKILL.md` 校验通过。
-- [ ] 确认 README 描述、许可证和免责声明符合预期。
-- [ ] 创建公开仓库后再 push。
-
-## GitHub 初始化示例
+在仓库根目录运行结构校验：
 
 ```bash
-git init
-git add README.md LICENSE SECURITY.md CONTRIBUTING.md OPEN_SOURCE.md .gitignore multi-lang-code-audit
-git commit -m "Initial open source release"
-git branch -M main
-git remote add origin https://github.com/<your-name>/multi-lang-code-audit-skill.git
-git push -u origin main
+python scripts/quick_validate.py multi-lang-code-audit
 ```
+
+该脚本检查 skill 名称、frontmatter 和必要文件，不验证审计准确率。索引脚本有改动时，还需要用已知内容的小型测试项目检查 JSON 和 Markdown 输出。
+
+## 推送
+
+提交前同步远端，避免覆盖其他贡献者的更新。推送后确认 GitHub 上的分支、文档链接和代码块显示正常。
+
+README 说明实际能力和限制，不放未经测试的准确率、覆盖率或工具对比。新增语言或漏洞类型时，同步补充参考文件和可复现的例子。

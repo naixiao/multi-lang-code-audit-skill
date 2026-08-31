@@ -1,47 +1,41 @@
 ---
 name: multi-lang-code-audit
-description: Evidence-driven white-box security audit workflow for PHP, Java, Python, .NET/C#, and Go source code. Use when Codex needs to audit Web/API/backend projects for routes, authentication, authorization, user-controlled inputs, dangerous sinks, dependency risks, exploitability, PoC requests, and vulnerability reports covering SQL injection, command injection, SSRF, XSS, file read/write/upload, Zip Slip, deserialization, XXE, auth bypass, IDOR, CSRF, weak credentials, unauthenticated access, configuration exposure, and business logic flaws.
+description: Audit PHP, Java, Python, Go, and .NET/C# source code for security vulnerabilities. Use for white-box review of Web/API/backend projects, tracing suspected vulnerabilities, and writing audit or CNVD/CVE reports with code evidence, PoCs, and remediation.
 ---
 
 # Multi-language Code Audit
 
-## Operating Rule
+## Scope
 
-Audit by evidence chain, not keyword hits. Every confirmed finding must connect an entry point or callable surface to user-controlled data, missing or bypassable validation, a real sink, exploitability conditions, and remediation. Preserve suspicious but unclosed traces in a pending-risk section instead of silently dropping them.
+For each confirmed finding, connect the entry point, attacker-controlled input, validation gap, sink, trigger conditions, and impact. Keep unresolved traces in a pending section with the missing evidence and next check.
 
-## Quick Start
+Stay within the requested project and audit scope. By default, read the source and write audit artifacts; do not change target code, install dependencies, commit the target repository, or run destructive PoCs. Confirm the target and permitted actions before dynamic testing.
 
-1. Identify the project language, framework, dependency manifests, entry points, and routing style.
-2. Run `scripts/audit_inventory.py <source_path> --out <output_dir>` when a filesystem scan is useful.
-3. Read only the needed language reference:
-   - PHP: `references/php.md`
-   - Java: `references/java.md`
-   - Python: `references/python.md`
-   - .NET/C#: `references/dotnet.md`
-   - Go: `references/go.md`
-4. Use `references/vulnerability-matrix.md` to select vulnerability classes and evidence requirements.
-5. Read `references/report-corpus-patterns.md` for practical patterns mined from the local vulnerability report corpus.
-6. Use `references/evidence-gates.md` to decide confirmed, environment-dependent, pending, or non-exploitable status.
-7. For PHP or Java projects, read `references/existing-skill-map.md` and delegate to the listed specialized local skills when available.
-8. Use `references/external-standards.md` only as a compact baseline for remediation and classification.
-9. Choose the report mode. If the user did not explicitly request a submission-ready report, write the normal audit report with `references/report-template.md`. If the user explicitly requests a CNVD or CVE submission-ready report, read `references/submission-reports.md` and use the local `漏洞报告/` corpus style when available.
+## References
 
-## Operating Modes
+Read the reference for each language in scope: [PHP](references/php.md), [Java](references/java.md), [Python](references/python.md), [Go](references/go.md), or [.NET/C#](references/dotnet.md).
 
-Use the strongest available mode for the target project.
+| Reference | When to use it |
+|---|---|
+| [Vulnerability matrix](references/vulnerability-matrix.md) | Select checks and finding type codes |
+| [Report patterns](references/report-corpus-patterns.md) | Check include, upload, query, archive, and business-logic patterns from past reports |
+| [Evidence requirements](references/evidence-gates.md) | Assign a finding status and identify missing proof |
+| [Specialized skills](references/existing-skill-map.md) | Use installed PHP/Java helpers for relevant phases |
+| [Remediation references](references/external-standards.md) | Check fix guidance and weakness classification |
+| [Audit report](references/report-template.md) | Write the default Markdown report |
+| [Submission reports](references/submission-reports.md) | Write a CNVD/CVE/GHSA/advisory report when explicitly requested |
 
-- **Delegated PHP mode**: If the project is PHP and the named PHP audit skills are installed, use `php-audit-pipeline` as the default orchestration model. Use `php-route-mapper`, `php-auth-audit`, `php-route-tracer`, and the relevant `php-*-audit` skills for sink-specific evidence.
-- **Delegated Java mode**: If the project is Java and the named Java audit skills are installed, use `java-audit-pipeline` as the default orchestration model. Use `java-route-mapper`, `java-auth-audit`, `java-route-tracer`, `java-vuln-scanner`, and the relevant Java sink skills.
-- **Standalone mode**: For Python, .NET/C#, Go, or when a specialized child skill is missing, use this skill's references and `audit_inventory.py` to complete the same evidence-driven workflow manually.
-- **Hybrid mode**: For mixed repositories, run recon once, split by language/module, run delegated PHP/Java mode where possible, standalone mode for other languages, then merge into one report.
+## Working Method
 
-Never stop at inventory output. The inventory is only a starting index; a usable audit requires trace, exploitability judgment, and a report.
+For PHP/Java, use installed pipeline and specialized skills where they fit the requested scope. If unavailable, continue with this skill's references. For mixed repositories, map shared entry points once, split the review by module or language, and merge the findings.
+
+When an initial index would help, run `python scripts/audit_inventory.py <source_path> --out <output_dir>`. It uses text matching, not AST or data-flow analysis. The Markdown output caps each candidate list at 200 entries; consult the JSON for the full results. Review excluded directories separately when they are in scope.
+
+Continue from the index to call-chain tracing, exploitability analysis, and reporting.
 
 ## Audit Pipeline
 
 ### 1. Recon
-
-Map the repository before judging vulnerabilities.
 
 - Record source root, language mix, framework indicators, dependency manifests, generated/vendor directories, test/demo code, and deploy-relevant config.
 - Enumerate HTTP routes, RPC handlers, CLI/cron jobs, queue consumers, upload/download endpoints, template renderers, archive extractors, and admin/back-office surfaces.
@@ -50,18 +44,14 @@ Map the repository before judging vulnerabilities.
 
 ### 2. Source-to-Sink Triage
 
-Build a candidate index, then prioritize.
-
 - Search globally for dangerous sinks and high-risk framework APIs.
 - For each sink, record file, line, function/method, sink arguments, nearby validation, reachable entry, and suspected source.
 - Prioritize public unauthenticated routes, login/reset/import/upload/admin actions, file/archive handlers, report/query builders, callback/webhook handlers, template customizers, and endpoints with `id`, `file`, `path`, `url`, `cmd`, `query`, `sort`, `order`, `redirect`, `template`, `xml`, or `upload` parameters.
-- Always add corpus-derived candidates: dynamic include/page dispatch, original filename preservation, MIME/content-type-derived extension, path fields used as directories, header-derived IP, unauthenticated action dispatchers, weak/default credentials, source map exposure, HQL/ORM short-query fragments, and archive extraction boundary checks.
-- Keep static-only hits as `PENDING_STATIC` until reachability and controllability are closed.
+- Check report-derived patterns where the corresponding features exist: dynamic include/page dispatch, original filename preservation, MIME/content-type-derived extension, path fields used as directories, header-derived IP, unauthenticated action dispatchers, weak/default credentials, source map exposure, HQL/ORM short-query fragments, and archive extraction boundary checks.
+- Keep search hits without a known call chain as `STATIC_ONLY`; use `PENDING_TRACE` once a partial trace is available.
 - For PHP/Java projects, map each candidate to the specialized child skill in `references/existing-skill-map.md`. If the child skill exists, load it before writing category-specific conclusions.
 
 ### 3. Trace
-
-For each high-priority candidate, trace actual data flow.
 
 - Follow request dispatch to controller/handler/service/DAO/storage calls.
 - Track variable assignment, transformations, validation, escaping, canonicalization, type conversion, allowlists, deny lists, and framework binders.
@@ -70,7 +60,7 @@ For each high-priority candidate, trace actual data flow.
 
 ### 4. Vulnerability Analysis
 
-Classify with the matrix and avoid overclaiming.
+Assign status using `references/evidence-gates.md`. Record separately whether a PoC was executed; code confirmation alone does not mean runtime reproduction succeeded.
 
 - Confirm a finding only when route or callable entry, controllable source, insufficient guard, reachable sink, and exploitability conditions are all present.
 - Mark as environment-dependent when the code creates a dangerous primitive but impact depends on deployment, such as uploaded PHP execution, symlink behavior, same-prefix path layout, database-specific SQL functions, or proxy trust.
@@ -79,21 +69,16 @@ Classify with the matrix and avoid overclaiming.
 
 ### 5. Reporting
 
-Use the report template and include:
+Write a Markdown report using `references/report-template.md`:
 
 - Executive summary and risk counts.
 - Coverage matrix for routes, auth, dependencies, sink classes, and language/framework-specific checks.
 - Findings ordered by severity and exploitability.
 - For each finding: ID, severity, affected entry, location, source-to-sink chain, exploitability prerequisites, PoC/request sample, impact, remediation, and confidence.
-- Pending-risk pool for unresolved traces and static sink hits.
+- Unresolved traces and static sink hits, with the next check for each.
 - Fix priority and regression-search commands.
 
-Report mode rules:
-
-- Default to `GENERAL_AUDIT` when the user only asks for audit results, vulnerability report, PoC, or remediation.
-- Use `CNVD_SUBMISSION` only when the user explicitly asks for a CNVD-ready, CNVD-submittable, or CNVD-style report.
-- Use `CVE_SUBMISSION` only when the user explicitly asks for a CVE-ready, CVE-submittable, advisory, GHSA, or responsible-disclosure style report.
-- For CNVD/CVE submission modes, include manual evidence markers instead of pretending screenshots or videos were captured. CNVD usually needs screenshots and often a reproduction video; CVE/advisory reports usually need screenshots or terminal output, but not video unless requested.
+Default to `GENERAL_AUDIT`. When the user explicitly requests a CNVD or CVE/GHSA/advisory report, follow `references/submission-reports.md` for language, sections, local examples, and manual evidence markers. Do not present missing screenshots, videos, assigned IDs, or vendor confirmations as existing evidence.
 
 ## Expected Output Layout
 
@@ -113,15 +98,15 @@ When the user does not specify an output path, create `{source_path}_audit` and 
     {project_name}_code_audit_{timestamp}.md
 ```
 
-For delegated PHP/Java mode, preserve child skill outputs when they are generated, but also merge the findings into the single final report.
+Preserve any specialized skill outputs and merge their findings into the final report.
 
 ## Severity Model
 
-Use this scoring when CVSS is not already known:
+When a CVSS score is unavailable, use the following internal priority score. It is not a CVSS calculation and must not be reported as one:
 
 ```text
 Score = Reachability * 0.40 + Impact * 0.35 + Complexity * 0.25
-CVSS-like = Score / 3.0 * 10.0
+Priority = Score / 3.0 * 10.0
 ```
 
 - Reachability: 3 unauthenticated/public, 2 normal authenticated user, 1 admin/internal/scheduled/local, 0 unreachable/dead code.
@@ -132,12 +117,12 @@ Map to `Critical` 9.0-10.0, `High` 7.0-8.9, `Medium` 4.0-6.9, `Low` 0.1-3.9.
 
 Finding IDs use `{severity-prefix}-{type-code}-{sequence}`, such as `C-SQL-001`, `H-UPLOAD-002`, `M-AUTH-003`.
 
-## Quality Bar
+## Before Delivery
 
 Before finishing, verify:
 
 - No confirmed finding lacks file/line evidence.
 - No PoC contains unreplaced route, parameter, host, token, or cookie placeholders except explicit `{host}`, `{cookie}`, `{token}`.
-- No high-risk sink disappeared merely because the trace was incomplete; unresolved items are in the pending-risk pool.
+- Unresolved high-risk candidates are listed with the evidence still needed.
 - Auth requirements and trigger conditions are stated for every finding.
 - Remediation includes both a code-level fix direction and a command or pattern to find similar code.

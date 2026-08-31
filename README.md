@@ -1,371 +1,162 @@
 # Multi-language Code Audit Skill
 
-面向 **PHP、Java、Python、Go、.NET/C#** 的多语言代码审计 Codex Skill。它不是简单的关键词扫描清单，而是一套围绕 **路由识别、鉴权分析、Source/Sink 追踪、数据流证据、漏洞确认、PoC 生成、修复建议、审计报告** 设计的白盒代码审计工作流。
+用于 PHP、Java、Python、Go、.NET/C# 代码审计的 Codex Skill，主要面向 Web、API 和后台项目。
 
-## 项目简介
+审计从入口和权限检查开始，追踪用户输入到数据库、文件、命令执行等操作，再整理漏洞证据、PoC 和修复建议。未完成验证的线索单独列出，便于继续排查。
 
-`multi-lang-code-audit` 是一个证据链驱动的代码审计 skill，适用于 Web/API/后台系统/开源 CMS/企业应用/组件项目的源码安全审计。它借鉴 SAST、人工白盒审计和真实漏洞报告的思路，把“发现疑似危险点”推进到“证明漏洞是否真实可利用”。
+## 安装
 
-核心目标：
+### 方式一：让 Codex 安装
 
-- 帮助审计人员快速理解陌生项目的入口、路由、参数、鉴权和危险操作。
-- 从 Source 到 Sink 追踪用户输入，减少只靠关键词扫描带来的误报。
-- 对未闭合的数据流保留“待验证风险池”，避免静默漏报。
-- 输出可以提交、复核、修复的漏洞报告，而不是只给一句结论。
-
-项目关键词：
-
-`PHP`、`Java`、`Python`、`Go`、`.NET`、`C#`、`代码审计`、`白盒审计`、`源码审计`、`安全审计`、`漏洞挖掘`、`Web 安全`、`SQL 注入`、`文件上传`、`任意文件读取`、`SSRF`、`RCE`、`XSS`、`XXE`、`反序列化`、`权限绕过`、`越权`、`业务逻辑漏洞`、`Zip Slip`。
-
-## 核心亮点
-
-- **覆盖主流后端语言**：PHP、Java、Python、Go、.NET/C#，适合多语言仓库和企业混合技术栈。
-- **面向真实代码审计**：围绕路由、鉴权、参数、调用链、Source/Sink、PoC、修复建议组织流程。
-- **证据链优先**：每个漏洞要求给出入口、数据来源、校验缺陷、危险 Sink、触发条件和影响边界。
-- **降低误报**：区分 `CONFIRMED`、`ENV_DEPENDENT`、`PENDING_TRACE`、`STATIC_ONLY`、`NOT_EXPLOITABLE`。
-- **不漏掉半成品风险**：无法闭合的数据流不会被删除，而是进入待验证风险池，方便后续深挖。
-- **融合实战模式**：内置动态 include、MIME 绕过、HQL 注入、Zip Slip、弱口令、未授权 action、Source Map 泄露等真实报告模式。
-- **报告即交付物**：内置统一报告模板，输出风险统计、覆盖矩阵、漏洞详情、PoC、修复优先级和回归搜索命令。
-- **支持提交型报告**：用户明确要求时，可生成 CNVD/CVE 风格报告，并标注截图、视频等人工复核证据位。
-- **适合 SRC/CNVD/CVE/Bug Bounty**：既能做项目全量审计，也能围绕单个高危入口做深度漏洞挖掘。
-- **轻量可扩展**：规则、语言参考、报告模式都在 Markdown 中，方便安全研究员持续补充自己的方法论。
-
-## 核心特性
-
-### 1. 多语言白盒审计
-
-支持 PHP、Java、Python、Go、.NET/C# 的常见 Web/API/后台项目审计，覆盖原生框架、MVC 框架、REST API、后台管理系统、上传/下载模块、任务队列、CLI/定时任务等入口。
-
-### 2. Route -> Auth -> Trace -> Sink 流程
-
-审计流程不是“搜危险函数就结束”，而是按以下路径推进：
-
-```text
-技术栈识别
-  -> 路由/入口/参数枚举
-  -> 鉴权与权限边界分析
-  -> Source/Sink 候选点提取
-  -> 调用链和数据流追踪
-  -> 漏洞可利用性判断
-  -> PoC 与修复建议
-  -> 最终审计报告
-```
-
-### 3. 实战漏洞模式库
-
-内置从真实漏洞报告提炼出的高价值检查点：
-
-- PHP 动态 `include $page . '.php'` 与 `php://filter` 源码读取
-- `mime_content_type()`、`Content-Type`、原始文件名导致的上传绕过
-- `getClientOriginalName()`、双后缀、GIF polyglot 上传风险
-- 未授权 `action` 分发器和后台 AJAX 接口
-- `X-Forwarded-For` 等 Header 进入 SQL 或业务身份逻辑
-- Java `uniqueId/path/name` 字段进入 `Paths.get()` 导致任意文件写入
-- HQL/JPQL/ORM 短查询片段拼接导致注入
-- Zip Slip、same-prefix path bypass、symlink/hardlink 解压逃逸
-- 弱口令、默认账号、未授权访问、Source Map 泄露
-- 充值、排名、邀请、订单状态等业务逻辑缺陷
-
-### 4. 可运行的初始审计索引器
-
-内置 `audit_inventory.py`，可快速生成项目语言、依赖、路由候选、Source 候选和 Sink 候选清单，作为人工审计和 Agent 审计的起点。
-
-### 5. 统一漏洞报告模板
-
-报告模板关注“可复核”和“可修复”：
-
-- 风险统计
-- 覆盖矩阵
-- 漏洞总览
-- Source-to-Sink 数据流
-- 可利用前置条件
-- HTTP PoC / 本地 PoC
-- 影响分析
-- 修复建议
-- 回归搜索命令
-- 待验证风险池
-
-### 6. CNVD / CVE 提交报告模式
-
-默认情况下，skill 会直接生成普通代码审计报告。只有当用户明确声明“生成可提交 CNVD 报告”或“生成可提交 CVE/GHSA/advisory 报告”时，才会切换到提交型报告模式。
-
-## 适用场景
-
-- PHP、Java、Python、Go、.NET 项目的源码安全审计
-- SRC、CNVD、CVE、Bug Bounty 漏洞挖掘辅助
-- 开源 CMS、后台管理系统、API 服务、企业 Web 系统审计
-- 路由、参数、鉴权、权限、文件操作、数据库操作梳理
-- 生成结构化漏洞报告、PoC、修复建议和回归搜索语句
-- 安全团队沉淀自己的代码审计方法论
-- 红队/蓝队/安全研究员做源码级漏洞复现和根因分析
-
-## 支持的审计类型
-
-- SQL/HQL/ORM 注入
-- NoSQL 注入
-- 命令执行 / 命令注入
-- SSRF
-- XSS
-- 任意文件读取 / 路径穿越 / LFI
-- 任意文件上传 / 危险文件上传
-- 任意文件写入 / 删除
-- Zip Slip / 归档解压路径穿越
-- XXE
-- 反序列化 / 对象注入
-- 模板注入 / SSTI
-- 表达式注入
-- LDAP 注入
-- 开放重定向
-- CRLF / 响应拆分
-- 认证绕过 / 鉴权绕过 / 越权 / IDOR
-- CSRF
-- Session / Cookie / JWT 安全问题
-- 弱口令 / 默认口令
-- 配置暴露 / 调试信息 / Source Map 泄露
-- 加密与密钥安全问题
-- 日志与监控缺陷
-- 业务逻辑漏洞
-
-## 项目结构
-
-```text
-multi-lang-code-audit/
-  SKILL.md
-  agents/
-    openai.yaml
-  references/
-    php.md
-    java.md
-    python.md
-    go.md
-    dotnet.md
-    vulnerability-matrix.md
-    evidence-gates.md
-    report-corpus-patterns.md
-    existing-skill-map.md
-    external-standards.md
-    report-template.md
-    submission-reports.md
-  scripts/
-    audit_inventory.py
-```
-
-## 快速使用
-
-### 安装方式一：让 Codex 根据项目链接安装（推荐）
-
-在 Codex 新窗口中直接发送本项目地址，并让 Codex 帮你安装：
+把下面这段话发给 Codex：
 
 ```text
 帮我安装这个 Codex Skill：
 https://github.com/naixiao/multi-lang-code-audit-skill
 
-要求：
-1. 将仓库中的 multi-lang-code-audit/ 安装到本地 Codex skills 目录。
-2. 安装完成后检查 SKILL.md 是否存在。
-3. 运行 skill 校验脚本，确认该 skill 可被 Codex 识别。
+安装仓库中的 multi-lang-code-audit/ 目录，并检查 SKILL.md 和引用文件是否完整。
 ```
 
-安装完成后，新窗口可以直接使用：
+### 方式二：手动安装
+
+先克隆仓库：
+
+```bash
+git clone https://github.com/naixiao/multi-lang-code-audit-skill.git
+cd multi-lang-code-audit-skill
+```
+
+将 `multi-lang-code-audit/` 复制到本地 skills 目录。默认路径下的命令如下；如果配置了自定义目录，请替换目标路径。
+
+Windows：
+
+```powershell
+New-Item -ItemType Directory -Force "$env:USERPROFILE\.codex\skills" | Out-Null
+Copy-Item -Recurse .\multi-lang-code-audit "$env:USERPROFILE\.codex\skills\"
+```
+
+Linux / macOS：
+
+```bash
+mkdir -p ~/.codex/skills
+cp -r ./multi-lang-code-audit ~/.codex/skills/
+```
+
+安装后确认存在 `skills/multi-lang-code-audit/SKILL.md`。如果目标目录已有旧版，更新前请先保留自己的修改。
+
+### 方式三：不安装，直接引用文件
+
+在 Codex 中打开本仓库，然后发送：
 
 ```text
-使用 $multi-lang-code-audit 对源码目录进行完整代码审计，默认输出漏洞报告、证据链、PoC 和修复建议；如果需要，也可以明确要求生成可提交的 CNVD 或 CVE/GHSA/advisory 漏洞报告。
+读取 multi-lang-code-audit/SKILL.md，按其中的流程审计 /path/to/source。
+将报告保存到 /path/to/output。
+```
+
+## 使用
+
+安装后，在新会话中指定源码路径和输出目录：
+
+```text
+使用 $multi-lang-code-audit 对源码目录进行完整代码审计，输出 Markdown 漏洞报告、证据链、PoC 和修复建议。需要提交报告时，可指定生成 CNVD（中文）或 CVE/GHSA/advisory 报告。
 源码路径：/path/to/source
 输出目录：/path/to/output
 ```
 
-### 安装方式二：克隆后复制 Skill 目录
+没有明确要求 CNVD/CVE 报告时，默认生成普通审计报告。提交稿中的截图、视频等缺失证据会标为人工复核项；生成提交稿不代表漏洞已被收录。
 
-将本仓库中的 `multi-lang-code-audit/` 整个目录复制到 Codex 可识别的 skills 目录中。
-
-Windows 示例：
-
-```powershell
-Copy-Item -Recurse .\multi-lang-code-audit $env:USERPROFILE\.codex\skills\
-```
-
-Linux / macOS 示例：
-
-```bash
-cp -r ./multi-lang-code-audit ~/.codex/skills/
-```
-
-安装后的目录结构应类似：
+也可以限定审计范围：
 
 ```text
-~/.codex/skills/
-  multi-lang-code-audit/
-    SKILL.md
-    agents/
-      openai.yaml
-    references/
-      php.md
-      java.md
-      python.md
-      go.md
-      dotnet.md
-      vulnerability-matrix.md
-      evidence-gates.md
-      report-corpus-patterns.md
-      existing-skill-map.md
-      external-standards.md
-      report-template.md
-      submission-reports.md
-    scripts/
-      audit_inventory.py
-```
-
-### 安装方式三：直接在当前仓库中使用
-
-如果你在 Codex 中打开的是本仓库，也可以直接引用：
-
-```text
-使用 $multi-lang-code-audit 审计 /path/to/source，输出完整代码审计报告。
-```
-
-### 使用建议
-
-代码审计类任务越明确，效果越好。推荐使用“审计目标 + 漏洞类型 + 输出要求”的方式提问。
-
-在 Codex 中可以这样使用：
-
-```text
-使用 $multi-lang-code-audit 审计这个源码目录，输出完整代码审计报告。
-```
-
-更推荐的强指向用法：
-
-```text
-使用 $multi-lang-code-audit 审计当前 PHP 项目是否存在 SQL 注入、文件上传、任意文件读取和未授权访问，输出 Markdown 漏洞报告。
+使用 $multi-lang-code-audit 审计当前 PHP 项目的 SQL 注入、文件上传、任意文件读取和未授权访问，输出 Markdown 报告。对证据完整的漏洞，同时生成中文 CNVD 报告。
 ```
 
 ```text
-使用 $multi-lang-code-audit 审计当前 Java 项目的路由、鉴权、SQL 注入、文件上传、任意文件读取和 XXE 风险，按严重程度输出报告。
+使用 $multi-lang-code-audit 审计当前 Java 项目的路由、鉴权、SQL 注入和 XXE，按严重程度整理报告。对证据完整的漏洞，同时生成 CVE/advisory 报告。
 ```
 
 ```text
-使用 $multi-lang-code-audit 梳理当前 Python/FastAPI 项目的路由、参数、鉴权和 SSRF/命令执行/文件读取风险。
+使用 $multi-lang-code-audit 梳理当前 Python/FastAPI 项目的路由、参数和鉴权，检查 SSRF、命令执行和文件读取风险。
 ```
 
 ```text
-使用 $multi-lang-code-audit 审计当前 Go 项目的 archive/zip 解压逻辑，重点分析 Zip Slip、same-prefix 绕过、symlink/hardlink 逃逸。
+使用 $multi-lang-code-audit 审计当前 Go 项目的归档解压逻辑，检查 Zip Slip、同前缀目录绕过及符号链接、硬链接逃逸。
 ```
 
 ```text
 使用 $multi-lang-code-audit 审计当前 .NET 项目的鉴权、IDOR、文件上传、路径穿越和 SQL 注入风险。
 ```
 
-```text
-使用 $multi-lang-code-audit 审计该项目，默认输出完整漏洞报告；如果确认存在可提交漏洞，请同时生成可提交的 CNVD 或 CVE/GHSA/advisory 报告。
-```
+项目较大时，可以按模块或漏洞类型分批审计。已有线索时，把路由、文件位置、运行环境和已验证的结果一起提供。
 
-### 推荐审计提示词
+## 审计内容
 
-适合全量项目审计：
+各语言的入口、框架和危险 API 见 [PHP](multi-lang-code-audit/references/php.md)、[Java](multi-lang-code-audit/references/java.md)、[Python](multi-lang-code-audit/references/python.md)、[Go](multi-lang-code-audit/references/go.md)、[.NET](multi-lang-code-audit/references/dotnet.md) 参考。
 
-```text
-使用 $multi-lang-code-audit 对源码目录进行白盒代码审计。
+主要检查范围：
 
-要求：
-1. 先识别语言、框架、依赖、入口、路由、权限模型和危险函数。
-2. 按漏洞类型拆分审计：SQL 注入、命令执行、SSRF、XSS、文件读取、文件上传、文件写入、Zip Slip、XXE、反序列化、鉴权绕过、越权、CSRF、弱口令、配置泄露、业务逻辑漏洞。
-3. 每个漏洞必须包含：漏洞类型、风险等级、文件路径、行号、可达路径、Source-to-Sink 数据流、触发条件、PoC、影响、修复建议、置信度。
-4. 无法闭合的数据流不要删除，放入“待验证风险池”。
-5. 最终输出 Markdown 审计报告，按严重程度排序。
+- 注入：SQL/HQL/ORM、NoSQL、命令、模板、表达式和 LDAP。
+- 文件操作：上传、读取、写入、删除、路径穿越和归档解压。
+- Web 与解析器：SSRF、XSS、XXE、反序列化、开放重定向和 CRLF。
+- 权限与业务：认证绕过、越权、CSRF、Session/JWT、默认凭据和业务状态检查。
+- 配置与依赖：调试暴露、密钥、日志，以及依赖版本和使用路径。
 
-源码路径：/path/to/source
-输出路径：/path/to/output
-```
+[报告案例中的检查点](multi-lang-code-audit/references/report-corpus-patterns.md) 补充了动态 include、原始文件名上传、HQL 查询片段、同前缀路径绕过等模式。原始漏洞报告不随仓库发布。
 
-适合单类型深挖：
+## 报告输出
 
-```text
-使用 $multi-lang-code-audit 只审计当前项目的文件上传漏洞。
+报告包含审计范围、已检查与未完成的项目、漏洞详情、待验证线索和修复优先级。每个漏洞需要说明入口、文件与行号、输入来源、校验缺陷、危险操作、触发条件及影响。
 
-重点关注：
-- 原始文件名是否可控
-- 扩展名白名单是否完整
-- MIME / Content-Type 是否可绕过
-- 上传目录是否 Web 可访问或可执行
-- 是否存在路径穿越写入
-- 是否可与 include / 静态资源目录 / 解析配置形成利用链
+结论使用以下状态，严重程度另行评估：
 
-输出要求：
-- 给出所有上传入口
-- 给出 Source-to-Sink 数据流
-- 给出可执行 PoC
-- 给出修复建议和回归搜索命令
-```
+| 状态 | 含义 |
+|---|---|
+| `CONFIRMED` | 已有完整的入口到危险操作的代码证据；是否完成动态复现需另行说明 |
+| `ENV_DEPENDENT` | 代码存在危险行为，最终影响取决于部署条件 |
+| `PENDING_TRACE` | 调用链、输入可控性或分支条件尚未查清 |
+| `STATIC_ONLY` | 只命中搜索规则，尚未找到可达调用链 |
+| `NOT_EXPLOITABLE` | 已找到阻断利用的具体证据 |
 
-### 使用 Codex Goal 持续审计
+字段和示例见[报告模板](multi-lang-code-audit/references/report-template.md)。
 
-如果项目较大，可以用 Codex 的目标模式持续运行：
+## 索引脚本
 
-```text
-/goal
-你是代码审计编排器。
-
-任务：
-1. 使用 $multi-lang-code-audit 完整阅读并遵守 SKILL.md。
-2. 先枚举目标仓库的语言、框架、入口、路由、权限模型、数据流、危险函数、配置与依赖。
-3. 将审计拆分为多个漏洞类型，每次只聚焦一种漏洞类型，避免泛化。
-4. 每轮结果必须包含：漏洞类型、风险等级、文件路径、行号、可达路径、触发条件、攻击方式、影响、证据、修复建议、置信度、是否需要动态验证。
-5. 主审计员需要复核结果，去重、降噪、排除误报，并把所有单项结果合并成最终审计报告。
-6. 最终报告按严重程度排序，并明确列出：确认漏洞、环境依赖漏洞、疑似漏洞、未发现但已覆盖的审计项、审计盲区。
-
-源码路径：/path/to/source
-输出路径：/path/to/output
-```
-
-也可以先运行内置索引脚本，对项目做第一轮语言、路由、Source/Sink 和依赖清点：
+`audit_inventory.py` 只依赖 Python 标准库，可单独运行：
 
 ```bash
 python multi-lang-code-audit/scripts/audit_inventory.py /path/to/source --out /path/to/output
 ```
 
-### 安全边界
+输出 `audit_inventory.json` 和 `audit_inventory.md`，记录语言分布、依赖清单以及路由、输入来源和危险操作的候选位置。
 
-默认建议只做只读审计：
+使用时注意：
 
-- 不修改目标源码。
-- 不删除文件。
-- 不提交 git。
-- 不安装项目依赖，除非用户明确授权。
-- 不执行破坏性 PoC。
-- 如需运行命令，仅用于读取项目信息、搜索代码、运行只读测试或静态分析。
-- 对真实目标、Cookie、Token、账号密码、密钥和未公开 PoC 做脱敏处理。
+- 脚本按文本模式匹配，不解析 AST，也不做跨文件数据流分析。
+- 默认跳过 `vendor`、`node_modules`、`build`、`dist` 等目录和超过 2 MB 的文件；审计范围包含这些内容时需要另行检查。
+- Markdown 中的路由、Source 和每类 Sink 最多展示 200 条，完整匹配结果在 JSON 中。
+- 命中结果不是漏洞结论，需要继续检查调用链和防护逻辑。
 
-## 设计特点
+## 文件说明
 
-- **多语言覆盖**：支持 PHP、Java、Python、Go、.NET/C#。
-- **证据链优先**：每个漏洞都要求入口、Source、校验缺陷、Sink、触发条件、影响和 PoC。
-- **不静默丢弃风险**：未闭合的数据流会进入待验证风险池，而不是直接忽略。
-- **适配实战报告**：内置来自真实漏洞报告的审计模式，如动态 include、MIME 绕过、HQL 注入、Zip Slip、弱口令和未授权 action。
-- **统一报告模板**：输出风险统计、覆盖矩阵、漏洞详情、PoC、修复建议、回归搜索命令。
+```text
+multi-lang-code-audit/
+  SKILL.md                  审计流程与输出要求
+  agents/openai.yaml        Codex 元数据
+  references/               语言规则、证据分级和报告模板
+  scripts/audit_inventory.py 初始索引脚本
+scripts/quick_validate.py    仓库内的 skill 结构校验
+```
 
-## 与普通 SAST 的区别
+## 使用限制
 
-普通 SAST 更擅长批量发现模式，本项目更强调“审计员式证据闭环”：
+结果受模型、上下文、源码完整性和运行环境影响，不能保证覆盖全部漏洞。部署配置缺失、动态路由、跨服务调用和运行时行为需要补充证据；报告应在人工复核后使用。
 
-| 能力 | 普通关键词扫描 | 本项目 |
-|---|---|---|
-| 多语言覆盖 | 取决于规则 | PHP / Java / Python / Go / .NET |
-| 路由与入口 | 常被弱化 | 优先枚举 |
-| 鉴权分析 | 通常不足 | 单独建模 |
-| Source/Sink | 有 | 强调数据流证据 |
-| 误报处理 | 依赖规则质量 | 使用证据门禁和状态分级 |
-| 未闭合风险 | 容易丢失 | 进入待验证风险池 |
-| 报告输出 | 告警为主 | 可提交的漏洞报告 |
-| 方法扩展 | 写规则成本较高 | Markdown 化，可持续沉淀 |
+仅审计已获授权的项目。默认只读取源码并写入审计输出，不修改目标代码、不安装项目依赖、不提交目标仓库，也不执行破坏性 PoC。动态验证前需确认目标、账号和测试范围。公开报告时请移除凭据、个人信息和未公开的目标信息。
 
-## 支持项目
+## 参与维护
 
-如果这个项目对你的 PHP、Java、Python、Go、.NET 代码审计、白盒审计或漏洞挖掘有帮助，欢迎点一个 Star，方便后续持续更新规则、样例和实战审计模式。
+规则补充、误报案例和脚本问题可以提交 Issue 或 PR。请附上脱敏代码、复现方式和预期结果，具体要求见[贡献指南](CONTRIBUTING.md)。
 
-## 免责声明
+安全问题见[安全政策](SECURITY.md)，许可证为 [MIT](LICENSE)。
 
-本项目仅用于合法授权的代码审计、安全研究、漏洞验证和防御建设。请勿在未授权目标上使用本项目进行攻击、入侵或破坏性测试。使用者应自行承担使用本项目产生的法律和安全责任。
-
-## License
-
-MIT License
+如果用得上，欢迎点个 Star。

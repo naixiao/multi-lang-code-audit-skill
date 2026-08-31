@@ -1,6 +1,6 @@
-# Evidence Gates
+# Finding Status and Evidence
 
-Use these gates to prevent both false positives and silent misses.
+Assign status from the evidence available. Record dynamic verification separately: a code-supported finding may still have an unexecuted PoC.
 
 ## Status Labels
 

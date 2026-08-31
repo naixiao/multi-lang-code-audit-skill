@@ -1,16 +1,18 @@
-# Submission-Ready Report Modes
+# CNVD and CVE Reports
 
-Use this reference only when the user explicitly asks for a CNVD-ready, CVE-ready, advisory-ready, or submission-ready vulnerability report. Otherwise generate the normal audit report from `report-template.md`.
+Use this reference for an explicitly requested CNVD, CVE, GHSA, or advisory report. Otherwise use `report-template.md`. Output Markdown unless the user requests another format. A submission draft does not establish acceptance, an assigned ID, or successful reproduction.
 
 ## Mode Selection
 
 - `GENERAL_AUDIT`: Default. Use for ordinary code audit reports, vulnerability summaries, PoCs, remediation, and internal review output.
-- `CNVD_SUBMISSION`: Use only when the user mentions CNVD, CNVD submission, CNVD-ready report, or a directly submittable CNVD report.
-- `CVE_SUBMISSION`: Use only when the user mentions CVE, GHSA, advisory, CNA, responsible disclosure, vendor disclosure, or a directly submittable CVE report.
+- `CNVD_SUBMISSION`: The user asks for a CNVD report or submission draft.
+- `CVE_SUBMISSION`: The user asks for a CVE, GHSA, CNA, advisory, or vendor-disclosure report.
+
+A request to check known CVEs or review an existing CNVD finding does not, by itself, request a submission report.
 
 Do not ask which mode to use unless the user's wording is ambiguous and the output format materially changes the deliverable.
 
-## Local Corpus Routing
+## Local Examples
 
 When the local `漏洞报告/` folder exists, use it as a style and field reference:
 
@@ -19,6 +21,8 @@ When the local `漏洞报告/` folder exists, use it as a style and field refere
 - SRC/Butian examples may inform readable PoC style, but do not use them as the primary CNVD/CVE structure unless CNVD/CVE examples are missing.
 
 Use the corpus for report shape, section order, evidence granularity, and wording style. Do not copy target names, private data, tokens, cookies, screenshots, or unrelated vulnerability facts into the new report.
+
+The example folders are optional and are not distributed with the skill. If unavailable, use the sections below.
 
 ## Evidence Placeholder Rules
 
@@ -45,7 +49,7 @@ CVE/advisory evidence expectation:
 
 ## CNVD Submission Template
 
-Use Chinese. Prefer concise, directly submittable language.
+Write in Chinese. State what was verified, what remains untested, and which evidence needs to be attached.
 
 Required sections:
 
@@ -97,7 +101,7 @@ The `Evidence To Attach` section should include:
 - `[Manual Review - Screenshot]` for version proof, PoC result, and fixed-version comparison where available.
 - `[Manual Review - Video]` only when requested or needed for complex interaction.
 
-## Final Quality Gate
+## Before Submission
 
 Before finishing CNVD/CVE mode, verify:
 

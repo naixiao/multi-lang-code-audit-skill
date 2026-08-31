@@ -1,6 +1,6 @@
-# Local Report Corpus Patterns
+# Patterns from Vulnerability Reports
 
-These patterns are distilled from the local `漏洞报告` corpus and should be checked even when generic source/sink searches look quiet.
+These checks come from vulnerability reports. Apply them to the relevant features in the target project; the original reports are not included in this repository.
 
 ## PHP Patterns
 
@@ -163,7 +163,7 @@ Audit points:
 
 ### Weak Credentials and Unauthenticated Admin Surfaces
 
-The corpus contains many CNVD/SRC-style weak password, unauthenticated access, login bypass, and admin UI logic flaws. For every admin/backend project:
+For admin/backend projects:
 
 - Enumerate exposed admin panels and dashboards.
 - Check default credentials from docs, seed data, docker compose, installation SQL, and README.
@@ -179,15 +179,6 @@ Common report themes include recharge limit bypass, ranking manipulation, invita
 - Distinguish missing server-side checks from front-end-only restrictions.
 - Include replay, race, negative value, duplicate submit, and cross-account object ownership checks.
 
-## Report Style Learned From Corpus
+## Reporting
 
-Prefer findings that contain:
-
-- Risk statistics table.
-- Affected files and routes.
-- Source-to-sink chain as numbered steps.
-- Evidence IDs such as `EVID_SQL_EXEC_POINT`.
-- Exploitability prerequisites: auth requirement, input controllability, trigger condition, environment dependency.
-- Executable HTTP PoC or local PoC.
-- Regression `rg` command for similar code.
-- Final completeness check.
+Use [report-template.md](report-template.md) for the report structure. Where trace notes use evidence IDs, carry those IDs into the finding so the reader can locate the supporting code.

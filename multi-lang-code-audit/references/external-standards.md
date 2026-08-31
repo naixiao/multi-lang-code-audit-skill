@@ -1,6 +1,6 @@
-# External Standards Baseline
+# Remediation References
 
-Use this file as compact calibration, not as a substitute for source evidence.
+Use these references for fixes and CWE mapping. Finding status still depends on the target code.
 
 ## SQL Injection
 
@@ -48,10 +48,4 @@ Baseline:
 
 Reference: CWE-23 notes Zip Slip as archive-based relative path traversal, https://cwe.mitre.org/data/definitions/23.html
 
-## Classification Reminder
-
-Use standards to support remediation and weakness mapping, but the finding status must still be based on local code evidence:
-
-- CONFIRMED requires a closed source-to-sink chain.
-- ENV_DEPENDENT requires the dangerous primitive plus a named deployment dependency.
-- PENDING_TRACE requires preservation in the pending-risk pool.
+For finding status and required proof, see [evidence-gates.md](evidence-gates.md).

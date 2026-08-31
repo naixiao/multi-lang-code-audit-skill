@@ -1,6 +1,8 @@
 # Report Template
 
-```markdown
+Fill this template with the audit results. Remove example rows and inapplicable sections; do not count pending candidates as confirmed vulnerabilities.
+
+````markdown
 # {project_name} Code Security Audit Report
 
 - Source path: `{source_path}`
@@ -34,7 +36,7 @@
 
 | ID | Severity | Title | Entry | Status |
 |---|---|---|---|---|
-| C-SQL-001 | Critical | Example | `/path` | CONFIRMED |
+| {id} | {severity} | {title} | `{entry}` | {status} |
 
 ## Vulnerability Details
 
@@ -42,8 +44,9 @@
 
 | Item | Information |
 |---|---|
-| Severity | {Critical/High/Medium/Low} (CVSS-like {score}) |
-| Status | CONFIRMED / ENV_DEPENDENT / PENDING_TRACE / NOT_EXPLOITABLE |
+| Severity | {Critical/High/Medium/Low}; internal priority {score}/10, not CVSS |
+| Status | CONFIRMED / ENV_DEPENDENT / PENDING_TRACE / STATIC_ONLY / NOT_EXPLOITABLE |
+| Dynamic verification | {not run / reproduced / inconclusive; evidence location} |
 | Type | {SQL/UPLOAD/AUTH/...} |
 | Affected entry | `{route_or_entry}` |
 | Auth requirement | None / user / admin / internal / scheduled |
@@ -91,46 +94,19 @@ Cookie: {cookie}
 rg -n "{pattern}" {paths}
 ```
 
-## Pending Risk Pool
+## Pending Findings
 
 | Candidate | Type | Known Evidence | Missing Evidence | Next Action |
 |---|---|---|---|---|
-| `{file}:{line}` | SQL | raw query sink | route trace | trace caller chain |
+| `{file}:{line}` | {type} | {known evidence} | {missing evidence} | {next check} |
 
 ## Fix Priority
 
 1. {highest priority}
 2. {next}
 
-## Completeness Checks
+````
 
-- [ ] Every confirmed finding has location, data flow, PoC, and remediation.
-- [ ] Pending static hits are listed.
-- [ ] No template placeholders remain except `{host}`, `{cookie}`, `{token}` where intentional.
-```
+Before delivery, check that each confirmed finding has location, data flow, PoC, and remediation. List unresolved candidates and replace template placeholders, except intentional `{host}`, `{cookie}`, and `{token}` values.
 
-## Submission Mode Addendum
-
-Use this addendum only when the user explicitly asks for a CNVD-ready or CVE-ready report. Otherwise do not add these sections.
-
-### CNVD-Ready Evidence Markers
-
-```markdown
-## 提交前人工复核
-
-- [ ] [人工复核-截图] 漏洞产品、组件或版本证明：{where_to_capture}
-- [ ] [人工复核-截图] PoC 请求或本地复现命令：{where_to_capture}
-- [ ] [人工复核-截图] 漏洞触发结果或敏感影响证明：{where_to_capture}
-- [ ] [人工复核-视频] 从环境准备、触发漏洞到结果证明的完整复现过程：{what_to_record}
-```
-
-### CVE / Advisory Evidence Markers
-
-```markdown
-## Evidence To Attach
-
-- [ ] [Manual Review - Screenshot] Affected version proof: {where_to_capture}
-- [ ] [Manual Review - Screenshot] PoC execution and vulnerable result: {where_to_capture}
-- [ ] [Manual Review - Screenshot] Fixed-version or patched-behavior comparison, if available: {where_to_capture}
-- [ ] [Manual Review - Video] Optional only when interaction is complex or the user requests video proof: {what_to_record}
-```
+For explicitly requested CNVD/CVE reports, use [submission-reports.md](submission-reports.md). Keep submission sections and evidence markers there rather than appending them to every audit report.
