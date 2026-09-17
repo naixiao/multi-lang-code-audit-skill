@@ -2,6 +2,8 @@
 
 Fill this template with the audit results. Remove example rows and inapplicable sections; do not count pending candidates as confirmed vulnerabilities.
 
+Default final reports should be self-contained audit writeups based on code evidence and reproduction. Do not include third-party issue links, reporter names, CVE/CNVD/GHSA IDs, or public advisory links unless the user explicitly requests a duplicate-check appendix or the chosen submission process requires it. Keep public-lead provenance in `working/public_issue_leads.md` instead of the final report.
+
 ````markdown
 # {project_name} Code Security Audit Report
 

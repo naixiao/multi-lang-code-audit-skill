@@ -10,6 +10,8 @@ Use this reference for an explicitly requested CNVD, CVE, GHSA, or advisory repo
 
 A request to check known CVEs or review an existing CNVD finding does not, by itself, request a submission report.
 
+When a finding was first identified from a public issue, advisory, CVE, CNVD, or GHSA lead, write the technical report from the independently verified code evidence and reproduction steps. Do not include third-party issue links, reporter names, public advisory links, or existing IDs in the main report body by default; keep them in `working/public_issue_leads.md`. If duplicate-check information is required by the submission channel, provide it in the duplicate-check section only. If the same issue is already confirmed as a public duplicate, do not frame the draft as a first-discovery or new-vulnerability submission; produce a reproduction/review report instead.
+
 Do not ask which mode to use unless the user's wording is ambiguous and the output format materially changes the deliverable.
 
 ## Local Examples

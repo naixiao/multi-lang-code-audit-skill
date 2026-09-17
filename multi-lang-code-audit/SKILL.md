@@ -29,6 +29,10 @@ Read the reference for each language in scope: [PHP](references/php.md), [Java](
 
 For PHP/Java, use installed pipeline and specialized skills where they fit the requested scope. If unavailable, continue with this skill's references. For mixed repositories, map shared entry points once, split the review by module or language, and merge the findings.
 
+When the source comes from a public GitHub/Gitee repository or the project URL is known, first inspect recent public project discussion for security leads from the last 1-2 years, especially English issues, PRs, discussions, advisories, and linked commits that mention vulnerability, security, exploit, bypass, injection, upload, file read/write, auth, SSRF, XXE, deserialization, RCE, path traversal, XSS, CSRF, open redirect, or disclosure. Treat each item as a lead, not as proof: record the issue URL, date, reporter wording, affected version or commit range, linked fix, and whether the audited code still contains the behavior in `working/public_issue_leads.md`. If the lead is reproducible in the audited version and the reproduction stays within the authorized test scope, it can become a finding and report draft. If public issue access is unavailable or no useful lead exists, continue the normal audit without blocking.
+
+Do not stop after reproducing public leads. After any issue-based reproduction, continue independent code review across routes, auth, dependencies, sinks, and language-specific checks to avoid missing unrelated vulnerabilities. Final audit reports should read as independent code-audit results: focus on file/line evidence, source-to-sink reasoning, reproduction, impact, and remediation. Do not include third-party issue links, reporter names, CVE/CNVD/GHSA IDs, or public advisory links in the final report by default; keep that provenance in `working/public_issue_leads.md`. If a formal submission target requires duplicate-check details, include only what is required and do not claim first discovery for a confirmed public duplicate.
+
 When an initial index would help, run `python scripts/audit_inventory.py <source_path> --out <output_dir>`. It uses text matching, not AST or data-flow analysis. The Markdown output caps each candidate list at 200 entries; consult the JSON for the full results. Review excluded directories separately when they are in scope.
 
 Continue from the index to call-chain tracing, exploitability analysis, and reporting.
@@ -93,6 +97,7 @@ When the user does not specify an output path, create `{source_path}_audit` and 
     routes.md
     auth_mapping.md
     high_risk_candidates.md
+    public_issue_leads.md
     trace_notes.md
   final/
     {project_name}_code_audit_{timestamp}.md
